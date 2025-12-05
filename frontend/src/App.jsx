@@ -19,7 +19,7 @@ import Location from "./pages/Location";
  {/*Academic Subpages */}
 import Calendar from "./pages/Calendar";
 import Syllabus from "./pages/Syllabus";
-import Textbook from "./pages/Textbook";
+import Textbook from "./pages/TextBook";
 import Classteacher from "./pages/ClassTeacherList";
 import ClassRoutine from "./pages/ClassRoutine";
 import ExamRoutine from "./pages/ExamRoutine";
