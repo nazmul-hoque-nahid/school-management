@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { IoChevronDown } from "react-icons/io5";
 import { navbarItems } from "./navbarData";
@@ -23,16 +23,16 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-linear-to-t from-slate-600 to-slate-900 shadow-md sticky top-0 z-50">
+    <nav className="bg-linear-to-t from-green-500 to-green-700 shadow-md sticky top-0 z-50">
 
       
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
 
         {/* LOGO (ONLY MOBILE + TABLET) */}
         <div className="lg:hidden">
-          <Link to="/" onClick={closeAll} className="flex items-center space-x-2">
+          <NavLink to="/" onClick={closeAll} className="flex items-center space-x-2">
             <img src={Logo} alt="Logo" className="h-10 w-10 rounded-full shadow-md" />
-          </Link>
+          </NavLink>
         </div>
 
         {/* MOBILE MENU BUTTON */}
@@ -46,7 +46,7 @@ export default function Navbar() {
         {/* NAVIGATION MENU */}
         <ul
           className={`
-            lg:flex lg:space-x-6 absolute lg:static left-0 w-full lg:w-auto 
+            lg:flex lg:space-x-4 absolute lg:static left-0 w-full lg:w-auto 
             bg-white lg:bg-transparent 
             transition-all duration-500 ease-in-out shadow-lg lg:shadow-none
             
@@ -63,19 +63,19 @@ export default function Navbar() {
 
               {/* NORMAL LINK */}
               {!item.dropdown ? (
-                <Link
+                <NavLink
                   to={item.path}
-                  className="block text-gray-700 lg:text-white font-medium hover:text-blue-700 transition"
+                  className="block text-gray-700 lg:text-white font-medium hover:text-red-400 transition"
                   onClick={closeAll}
                 >
                   {item.name}
-                </Link>
+                </NavLink>
               ) : (
                 <>
                   {/* DROPDOWN HEADER */}
                   <div
-                    className="flex items-center justify-between lg:justify-start cursor-pointer 
-                               text-gray-700 lg:text-white font-medium hover:text-blue-700"
+                    className="flex items-center justify-between lg:justify-start cursor-pointer hover:text-red-400
+                               text-gray-700 lg:text-white font-medium"
                     onClick={() => toggleMobileDropdown(item.name)}
                   >
                     {item.name}
@@ -91,7 +91,7 @@ export default function Navbar() {
                   {/* DROPDOWN MENU */}
                   <ul
                     className={`
-                     bg-linear-to-t from-slate-600 to-slate-900 border shadow-md rounded-md 
+                     bg-linear-to-t from-green-500 to-green-700 border shadow-md rounded-md 
                       lg:absolute lg:left-0 lg:mt-2 lg:w-56 
                       transition-all duration-300 z-50 text-sm
 
@@ -112,15 +112,15 @@ export default function Navbar() {
                     {item.dropdown.map((subItem) => (
                       <li
                         key={subItem.name}
-                        className="px-4 py-2 hover:bg-blue-700"
+                        className="px-4 py-2 hover:bg-green-400"
                       >
-                        <Link
+                        <NavLink
                           to={subItem.path}
                           onClick={closeAll}
                           className="text-white text-sm block font-semibold"
                         >
                           {subItem.name}
-                        </Link>
+                        </NavLink>
                       </li>
                     ))}
                   </ul>
