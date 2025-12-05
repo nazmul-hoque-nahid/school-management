@@ -65,10 +65,11 @@ export const navbarItems = [
         path: "/campus-life",
         dropdown: [
             { name: "Co-curricular", path: "/cocurricular" },
-            { name: "Club & Scociety", path: "/clubandscociety" },
+            { name: "Club & Scociety", path: "/clubandsociety" },
             { name: "Magazine", path: "/Magazine" },
             { name: "Gallery", path: "/gallery" },
             { name: "Library", path: "/library" },
         ],
     },
+    {name: "Login", path: "/login" },
 ];
