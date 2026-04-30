@@ -19,7 +19,7 @@ import Location from "./pages/Location";
  {/*Academic Subpages */}
 import Calendar from "./pages/Calendar";
 import Syllabus from "./pages/Syllabus";
-import Textbook from "./pages/Textbook";
+import Textbook from "./pages/TextBook";
 import Classteacher from "./pages/ClassTeacherList";
 import ClassRoutine from "./pages/ClassRoutine";
 import ExamRoutine from "./pages/ExamRoutine";
@@ -50,6 +50,9 @@ import Gallery from "./pages/Gallery";
 import Library from "./pages/Library";
 
 import Login from "./pages/Login";
+// import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
 
 function App() {
   return (
@@ -57,7 +60,7 @@ function App() {
       <Title/>
       <Navbar />
 
-      <div className="pt-70">
+      <div>
         <Routes>
           <Route path="/" element={<Home />} />
 
@@ -104,10 +107,13 @@ function App() {
           <Route path="/magazine" element={<Magazine />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/library" element={<Library />} />
+          
           <Route path="/login" element={<Login />} />
 
         </Routes>
       </div>
+
+      <Footer/>
     </>
   );
 }
