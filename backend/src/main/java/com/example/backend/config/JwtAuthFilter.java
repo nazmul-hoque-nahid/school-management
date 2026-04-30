@@ -1,10 +1,10 @@
 package com.example.backend.config;
 
 import com.example.backend.common.util.JwtUtil;
-import com.example.backend.user.entity.User;
 import com.example.backend.user.repository.UserRepository;
-import io.jsonwebtoken.io.IOException;
+import java.io.IOException;
 import jakarta.servlet.FilterChain;
+import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,23 +35,23 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         String token = header.substring(7);
-        String email = jwtUtil.extractEmail(token);
+        try {
+            String userId = jwtUtil.extractUserId(token);
+            String role = jwtUtil.extractRole(token);
 
-        User user = userRepo.findByEmail(email).orElse(null);
-
-        if (user != null) {
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(
-                            user.getEmail(),
+                            userId,
                             null,
-                            List.of(() -> "ROLE_" + user.getRole().name())
+                            List.of(() -> "ROLE_" + role)
                     );
 
             SecurityContextHolder.getContext().setAuthentication(auth);
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+            System.out.println("Invalid JWT: " + e.getMessage());
         }
-
         filterChain.doFilter(request, response);
     }
 }

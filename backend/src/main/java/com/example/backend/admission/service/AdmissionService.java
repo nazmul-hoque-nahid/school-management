@@ -1,7 +1,5 @@
 package com.example.backend.admission.service;
-import ch.qos.logback.core.status.Status;
 import com.example.backend.admission.dto.AdmissionFormRequest;
-import com.example.backend.admission.dto.AdmissionResponse;
 import com.example.backend.admission.entity.Admission;
 import com.example.backend.admission.entity.AdmissionForm;
 import com.example.backend.admission.entity.ApplicationStatus;
@@ -12,23 +10,35 @@ import com.example.backend.enrollment.entity.ClassEnrollment;
 import com.example.backend.enrollment.repository.EnrollmentRepository;
 import com.example.backend.student.entity.Student;
 import com.example.backend.student.repository.StudentRepository;
+import com.example.backend.user.entity.User;
+import com.example.backend.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class AdmissionService {
 private final AdmissionRepository admissionRepo;
 private  final AdmissionFormRepository formRepo;
 private  final StudentRepository studentRepo;
 private  final  EnrollmentRepository enrollmentRepo;
+private final UserRepository userRepo;
+    private final PasswordEncoder passwordEncoder;
+
     public AdmissionService(
             AdmissionFormRepository formRepo,
             AdmissionRepository admissionRepo,
             StudentRepository studentRepo,
-            EnrollmentRepository enrollmentRepo
+            EnrollmentRepository enrollmentRepo,
+            UserRepository userRepo,
+            PasswordEncoder passwordEncoder
     ) {
         this.formRepo = formRepo;
         this.admissionRepo = admissionRepo;
         this.studentRepo = studentRepo;
         this.enrollmentRepo = enrollmentRepo;
+        this.userRepo=userRepo;
+        this.passwordEncoder=passwordEncoder;
     }
 
     public AdmissionForm apply(AdmissionFormRequest req) {
@@ -69,38 +79,44 @@ private  final  EnrollmentRepository enrollmentRepo;
         form.setApplicationStatus(ApplicationStatus.REJECTED);
         return formRepo.save(form);
     }
+     @Transactional
+     public void confirmAdmission(String formId) {
 
-    public void confirmAdmission(String formId) {
+         AdmissionForm form = formRepo.findById(formId)
+                 .orElseThrow();
 
-        AdmissionForm form = formRepo.findById(formId)
-                .orElseThrow();
+         if (form.getApplicationStatus() != ApplicationStatus.APPROVED) {
+             throw new RuntimeException("Form not approved");
+         }
 
-        if (form.getApplicationStatus() != ApplicationStatus.APPROVED) {
-            throw new RuntimeException("Form not approved");
-        }
+         // 1. Create Admission
+         Admission admission = new Admission();
+         admission.setForm(form);
+         admission = admissionRepo.save(admission);
 
-        // 1. Create Admission
-        Admission admission;
-        admission = new Admission();
-        admission.setForm(form);
-        admissionRepo.save(admission);
+         // 2. Create User (FIRST)
+         User user = new User();
+         user.setEmail(form.getEmail());
+         user.setPassword(passwordEncoder.encode("123456"));
+         user.setRole(User.Role.STUDENT);
 
-        // 2. Create Student
-        Student student = new Student();
-        student.setAdmission(admission);
-        student.setFullName(form.getApplicantName());
-        student.setDob(form.getDob());
-        student.setGender(Student.Gender.valueOf(form.getGender().name()));
-        student.setPhone(form.getPhone());
-        student.setEmail(form.getEmail());
-        studentRepo.save(student);
+         user = userRepo.save(user);
 
-        // 3. Create Enrollment
-        ClassEnrollment enrollment = new ClassEnrollment();
-        enrollment.setStudent(student);
-        enrollment.setClassId(form.getIntendedClass());
-        enrollment.setSessionId(form.getSessionId());
-        enrollment.setRollNo(1); // temporary
-        enrollmentRepo.save(enrollment);
-    }
+         Student student = new Student();
+         student.setAdmission(admission);
+         student.setFullName(form.getApplicantName());
+         student.setDob(form.getDob());
+         student.setGender(Student.Gender.valueOf(form.getGender().name()));
+         student.setPhone(form.getPhone());
+         student.setEmail(form.getEmail());
+         student.setUser(user);
+         student = studentRepo.save(student);
+         // 4. Create Enrollment
+         ClassEnrollment enrollment = new ClassEnrollment();
+         enrollment.setStudent(student);
+         enrollment.setClassId(form.getIntendedClass());
+         enrollment.setSessionId(form.getSessionId());
+         enrollment.setRollNo(0); // manual later
+         enrollmentRepo.save(enrollment);
+     }
 }

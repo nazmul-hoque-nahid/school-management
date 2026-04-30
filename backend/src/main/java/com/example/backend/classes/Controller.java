@@ -1,6 +1,5 @@
 package com.example.backend.classes;
 
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

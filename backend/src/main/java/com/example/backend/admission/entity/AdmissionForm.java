@@ -1,6 +1,5 @@
 package com.example.backend.admission.entity;
 
-import ch.qos.logback.core.status.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "admission_forms")
+@Table(name="admission_forms")
 @Getter
 @Setter
 @NoArgsConstructor

@@ -1,6 +1,7 @@
 package com.example.backend.student.entity;
 
 import com.example.backend.admission.entity.Admission;
+import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,9 @@ public class Student {
     @OneToOne
     @JoinColumn(name = "admission_id", nullable = false, unique = true)
     private Admission admission;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String fullName;
     private LocalDate dob;
