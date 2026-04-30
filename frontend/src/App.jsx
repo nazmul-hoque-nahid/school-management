@@ -43,7 +43,7 @@ import FeesChart from "./pages/FeesChart";
 import Epayment from "./pages/Epayment";
 import NoticeBoard from "./pages/NoticeBoard";
 
-import CoCurricular from "./pages/CoCurricular";
+import CoCurricular from "./pages/Cocurricular";
 import ClubAndSociety from "./pages/ClubAndSociety";
 import Magazine from "./pages/Magazine";
 import Gallery from "./pages/Gallery";
